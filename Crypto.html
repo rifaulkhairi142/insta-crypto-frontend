@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>CoinCap BTC Price</h1>
+    <div id="price">Connecting...</div>
+
+    <script>
+      const priceEl = document.getElementById("price");
+      const socket = new WebSocket("wss://ws.coincap.io/prices?assets=bitcoin");
+
+      socket.onopen = () => {
+        priceEl.innerText = "Connected";
+        console.log("Connected");
+      };
+
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.bitcoin) {
+          priceEl.innerText = `BTC Price: $${parseFloat(data.bitcoin).toFixed(2)}`;
+        }
+      };
+
+      socket.onerror = (err) => {
+        priceEl.innerText = "WebSocket Error!";
+        console.error("WebSocket error:", err);
+      };
+
+      socket.onclose = () => {
+        console.warn("WebSocket closed");
+      };
+    </script>
+  </body>
+</html>
