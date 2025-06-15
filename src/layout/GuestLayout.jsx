@@ -4,6 +4,8 @@ import Header from '../component/Header'
 import SidebarItem from '../component/SidebarItem';
 import { History, HomeIcon, LayoutDashboard, User } from 'lucide-react';
 import CryptoPrice from '../component/CryptoPrice';
+import Footer from '../component/Footer';
+import CustomerService from '../component/CustomerService'
 
 
 const  GuestLayout = ({ children }) => {
@@ -23,11 +25,14 @@ const  GuestLayout = ({ children }) => {
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main className="flex-1 px-4">
-          <div className="mx-auto max-w-5xl pt-20">
+          <div className="mx-auto max-w-6xl pt-20">
             {children}
             {/* <CryptoPrice /> */}
           </div>
         </main>
+        <CustomerService/>
+        
+        <Footer/>
       </div>
     </div>
   );

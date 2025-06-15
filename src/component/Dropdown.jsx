@@ -7,11 +7,12 @@ const Dropdown = ({
   onChange,
   value,
   getOptionLabel = (option) => option.name,
-  displayIcon = "icon",
+  displayIcon = "logo",
 }) => {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const ref = useRef(null);
+  const isSelecting = useRef(false);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -22,6 +23,14 @@ const Dropdown = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (value) {
+      setSearchTerm(getOptionLabel(value));
+    } else {
+      setSearchTerm("");
+    }
+  }, [value]);
 
   const filteredOptions = searchTerm
     ? options.filter((itm) =>
@@ -61,13 +70,15 @@ const Dropdown = ({
             }}
             onFocus={() => setOpen(true)}
             onBlur={() => {
-              setTimeout(() => {
-                if (value) {
-                  setSearchTerm(getOptionLabel(value));
-                } else {
-                  setSearchTerm("");
-                }
-              }, 100);
+              if (isSelecting.current) {
+                isSelecting.current = false;
+                return;
+              }
+              if (value) {
+                setSearchTerm(getOptionLabel(value));
+              } else {
+                setSearchTerm("");
+              }
             }}
             className="w-full font-binance-plex text-xl font-bold text-textPrimary border-none outline-none ring-0 bg-transparent"
           />
@@ -96,6 +107,7 @@ const Dropdown = ({
                 key={itm.id || index}
                 className="hover:bg-bg4/30 text-white p-2 cursor-pointer"
                 onClick={() => handleSelect(itm)}
+                onMouseDown={() => (isSelecting.current = true)}
               >
                 <div className="flex flex-row gap-x-1 items-center">
                   {itm[displayIcon] && (
