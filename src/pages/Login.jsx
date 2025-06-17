@@ -12,20 +12,25 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {user, isError, isSuccess, isLoading, message} = useSelector((state)=>state.auth);
+  const { user, isError, isSuccess, isLoading, message } = useSelector(
+    (state) => state.auth
+  );
   const handleLogin = (e) => {
     e.preventDefault();
-    dispatch(LoginUser({email, password}));
+    if(!isLoading){
+      dispatch(LoginUser({ email, password }));
 
+    }
+    
   };
 
-  useEffect(()=> {
-    console.log('user ', user);
-    if(user || isSuccess){
-      navigate("/")
+  useEffect(() => {
+    console.log("user ", user);
+    if (user || isSuccess) {
+      navigate("/");
     }
     dispatch(reset());
-  }, [user, isSuccess, dispatch, navigate])
+  }, [user, isSuccess, dispatch, navigate]);
   return (
     <div className="bg-BasicBg flex justify-center p-2 flex-col items-center">
       <div className="p-10 w-full flex rounded-4xl md:max-w-md flex-col gap-y-6 ring-0 md:ring-1 ring-InputLine mt-20">
@@ -48,10 +53,20 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <PrimaryButton label="Login" onClick={(e) => handleLogin(e)} />
+          <PrimaryButton
+            label="Login"
+            onClick={(e) => handleLogin(e)}
+            loading={isLoading}
+          />
+          <button
+            className="text-textBrand font-binance-plex cursor-pointer hover:text-BtnBg"
+            onClick={() => navigate("/register")}
+          >
+            Daftar Sekarang
+          </button>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { History, HomeIcon, LayoutDashboard, User } from 'lucide-react';
 import CryptoPrice from '../component/CryptoPrice';
 import Footer from '../component/Footer';
 import CustomerService from '../component/CustomerService'
+import TopLoader from '../component/TopLoader';
 
 
 const  GuestLayout = ({ children }) => {
@@ -23,6 +24,7 @@ const  GuestLayout = ({ children }) => {
       <div className="flex flex-1 flex-col overflow-y-auto">
         {/* Sticky header works now */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <TopLoader />
 
         <main className="flex-1 px-4">
           <div className="mx-auto max-w-6xl pt-20">

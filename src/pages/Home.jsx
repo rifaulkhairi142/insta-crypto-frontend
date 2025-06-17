@@ -29,7 +29,7 @@ const Home = () => {
 
   useEffect(()=>{
     console.log("error ",isError);
-    if(isError){
+   if(isError){
       navigate('/login');
     }
 
