@@ -20,7 +20,7 @@ const cryptoList = [
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {isError} = useSelector((state)=>state.auth);
+  const {isError, isLoading} = useSelector((state)=>state.auth);
 
   useEffect(()=>{
     dispatch(getMe());

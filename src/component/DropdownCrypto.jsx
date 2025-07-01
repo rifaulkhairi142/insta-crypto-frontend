@@ -56,8 +56,8 @@ const DropdownCrypto = ({
 
   return (
     <div ref={ref} className="relative w-full h-fit">
-      <div className="w-full gap-y-2 flex flex-col text-white ring-1 hover:ring-primary ring-InputLine rounded-lg p-2">
-        <span className="font-binance-plex font-normal text-sm text-textPrimary">
+      <div className="w-full gap-y-2 bg-gray-700/50 flex flex-col text-white ring-1 hover:ring-primary ring-InputLine rounded-lg p-2">
+        <span className="font-binance-plex font-normal text-textPrimary">
           {label}
         </span>
         <div
@@ -85,7 +85,7 @@ const DropdownCrypto = ({
               <Delete />
             </button>
           )}
-          <ChevronDown size={20} />
+          <ChevronDown size={20}/>
         </div>
       </div>
 

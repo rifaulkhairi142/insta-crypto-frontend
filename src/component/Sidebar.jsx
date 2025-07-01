@@ -9,7 +9,7 @@ import { LuChevronsLeft } from "react-icons/lu";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen, children }) => {
   return (
-    <aside className="h-screen">
+    <aside className="h-screen md:block hidden">
       <nav className="h-full flex flex-col bg-black  shadow-xl">
         <div className="p-4 pb-2 flex justify-between items-center">
           <img

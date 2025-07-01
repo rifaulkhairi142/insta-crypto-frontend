@@ -11,12 +11,13 @@ import TopLoader from '../component/TopLoader';
 
 const  GuestLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobile, setMobile] = useState(false);
 
   return (
     <div className="bg-black h-screen flex">
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
-        <SidebarItem icon={<HomeIcon size={20} />} text="Home" active={true} alert />
-        <SidebarItem icon={<History size={20} />} text="History" alert />
+        <SidebarItem icon={<HomeIcon size={20} />} text="Home" active={true} alert link="/"/>
+        <SidebarItem icon={<History size={20} />} text="History" alert link="/transactions"/>
         <SidebarItem icon={<User size={20} />} text="Profile" alert />
       </Sidebar>
 
