@@ -28,6 +28,9 @@ const CoinInfo = () => {
   const [jumlah, setJumlah] = useState(0);
   const { user } = useOutletContext();
   const navigate = useNavigate();
+  const [paymentMethodData, setPaymentMethodData] = useState([]);
+  const [bankData, setBankData] = useState([]);
+  const [selectedBank, setSelectedBank] = useState(null);
 
   const showMessage = (msg, status) => {
     if (status === "error") {
@@ -72,7 +75,7 @@ const CoinInfo = () => {
       setLoading(false);
       console.log("error getting crypto coin data : ", error);
     } finally {
-      getAvailablePaymentMethod();
+      getPaymentMethod();
     }
   };
   useEffect(() => {
@@ -117,27 +120,37 @@ const CoinInfo = () => {
           }
         );
         showMessage(response?.data?.msg, "success");
-        setTimeout(()=>{
+        setTimeout(() => {
           navigate(`/payment-detail/${response.data.data.transaction.uuid}`);
-
         }, 2500);
       } catch (error) {
         setCreateTransactionLoading(false);
         showMessage(error?.response?.data?.msg, "error");
       } finally {
         setCreateTransactionLoading(false);
-        
       }
-    }else{
+    } else {
       showMessage("Mohon login terlebih dahulu", "error");
-      setTimeout(()=>navigate("/login", 2500));
+      setTimeout(() => navigate("/login", 2500));
+    }
+  };
+
+  const getPaymentMethod = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${config.base_url}/payment-methods`);
+      setPaymentMethodData(response.data.data);
+    } catch (error) {
+      setLoading(true);
+    } finally {
+      getAvailablePaymentMethod();
     }
   };
 
   const getAvailablePaymentMethod = async () => {
     try {
-      setLoading(true);
       const response = await axios.get(`${config.base_url}/banks`);
+      setBankData(response.data.data);
 
       const modifiedMethods = response.data.data.map((method) => {
         if (method.name === "gopay") {
@@ -150,9 +163,10 @@ const CoinInfo = () => {
         return method;
       });
 
-      setAvailablePaymentMethod(modifiedMethods);
+      // setAvailablePaymentMethod(modifiedMethods);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -271,7 +285,7 @@ const CoinInfo = () => {
                 Metode Pembayaran
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {avalibalePaymentMethod?.map((method) => (
+                {paymentMethodData?.map((method) => (
                   <button
                     key={method.id}
                     onClick={() => setSelectedPaymentMethod(method)}
@@ -299,6 +313,47 @@ const CoinInfo = () => {
                 ))}
               </div>
             </div>
+
+             {selectedPaymentMethod?.name === 'bank_transfer' && (
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-white mb-4">Pilih Bank</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {bankData.map((bank) => (
+                    <button
+                      key={bank.id}
+                      onClick={() => setSelectedBank(bank.id)}
+                      className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+                        selectedBank === bank.id
+                          ? 'border-yellow-400 bg-yellow-400/10'
+                          : 'border-gray-600 bg-gray-700/30 hover:border-gray-500'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center space-y-2">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs text-white ${bank.color}`}>
+                          {bank.logo}
+                        </div>
+                        <span className="text-white text-xs font-medium text-center leading-tight">
+                          {bank.name}
+                        </span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                
+                {/* Bank Transfer Info */}
+                <div className="mt-4 bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <Info className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-blue-300 text-sm">
+                        Transfer akan diproses dalam 1-24 jam setelah konfirmasi pembayaran. 
+                        Pastikan nominal transfer sesuai dengan total pembayaran.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Exchange Button */}
             <div className="mt-8">
@@ -353,7 +408,7 @@ const calculateAdminFee = (cryptoPrice, coinsData = {}, paymentMethod = {}) => {
   let paymentMethodFee = parseFloat(paymentMethod?.admin_fee_percentage) || 0;
 
   let adminFee =
-    (cryptoPrice) * ((paymentMethodFee + networkCoinFee + coinCryptoFee) / 100);
+    cryptoPrice * ((paymentMethodFee + networkCoinFee + coinCryptoFee) / 100);
 
   return adminFee;
 };

@@ -4,7 +4,6 @@ import {
   Menu,
   X,
   Zap,
-
   User,
   History,
   LogOut,
